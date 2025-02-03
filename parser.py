@@ -67,6 +67,7 @@ def get_schedule(group):  # расписание для указанной гр�
                     'lessons': []
                 }
 
+                lesson_name = "Пары нет"
                 discBlocks = lesson.find_all('div', class_='discBlock')
                 for discBlock in discBlocks:
                     if 'cancelled' in discBlock.get('class', []):
