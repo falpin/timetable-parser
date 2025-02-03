@@ -1,11 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+import json
 
 URL = "https://pronew.chenk.ru/blocks/manage_groups/website/"
 COMPLEX = ["list.php?id=1", "list.php?id=3"]
 
-def get_table_courses(complex):  # получение всех групп и курсов
+def get_courses(complex):  # получение всех групп и курсов
     response = requests.get(URL+complex)
     soup = BeautifulSoup(response.text, 'html.parser')
     courses = soup.find_all('div', class_='spec-year-block-container')
@@ -28,7 +29,7 @@ def get_table_courses(complex):  # получение всех групп и к�
                 group_link = group_link_tag['href'].strip()
                 course_dict[year_name][group_name] = group_link
 
-    return course_dict
+    return json.dumps(course_dict)
 
 def get_schedule(group):  # расписание для указанной группы
     response = requests.get(URL+group)
@@ -106,4 +107,4 @@ def get_schedule(group):  # расписание для указанной гр�
     else:
         schedule_dict['Ошибка'] = f"Ошибка при запросе: {response.status_code}"
 
-    return schedule_dict
+    return json.dumps(schedule_dict)
