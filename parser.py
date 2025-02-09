@@ -46,11 +46,13 @@ def get_schedule(group):  # расписание для указанной гр�
             day_schedule = day.find(
                 'div', attrs={'style': 'padding-left: 6px;'})  # расписание дня
 
-            lessons_list = []
+            lessons_list = {}
 
             lessons = day_schedule.find_all(
                 'div', class_='lessonBlock')  # блок пар
+            i = 0
             for lesson in lessons:
+                i += 1
                 lesson_time_block = lesson.find(
                     'div', class_='lessonTimeBlock').text.strip().split('\n')
                 lesson_number = lesson_time_block[0].strip()
@@ -62,13 +64,12 @@ def get_schedule(group):  # расписание для указанной гр�
                     lesson_time_finish = "???"
 
                 lesson_info = {
-                    'number': lesson_number,
-                    'time_start': lesson_time_start,
-                    'time_finish': lesson_time_finish,
-                    'lessons': []
+                    "time_start": lesson_time_start,
+                    "time_finish": lesson_time_finish,
+                    "lessons": {}
                 }
 
-                lesson_name = "Пары нет"
+                lesson_name = None
                 discBlocks = lesson.find_all('div', class_='discBlock')
                 for discBlock in discBlocks:
                     if 'cancelled' in discBlock.get('class', []):
@@ -80,27 +81,25 @@ def get_schedule(group):  # расписание для указанной гр�
                         lesson_name = re.sub(r'\(.*?\)', '', lesson_name)
                         lesson_name = lesson_name.strip()
                     except:
-                        lesson_name = "Пары нет"
+                        lesson_name = None
 
                     lesson_teachers_data = discBlock.find_all('div', class_='discSubgroup')
-                    lesson_data = []
+                    lesson_data = {}
                     for subgroup in lesson_teachers_data:
                         teacher = subgroup.find(
                             'div', class_='discSubgroupTeacher').text.strip()
                         classroom = subgroup.find('div', class_='discSubgroupClassroom').text.strip()
                         classroom = classroom.replace("???", '')
-                        lesson_data.append({
-                            'teacher': teacher,
-                            'classroom': classroom
-                        })
+                        lesson_data[teacher] = classroom
                         
-                    lesson_info['lessons'].append({
-                        'name': lesson_name,
-                        'teachers': lesson_data
-                    })
+                    lesson_info['lessons'] = {lesson_name: lesson_data}
 
-                if lesson_name != "Пары нет" and lesson_name != "":
-                    lessons_list.append(lesson_info)
+                if lesson_name is not None and lesson_name != "":
+                    if lesson_number == "??-??":
+                        if i == 1: i = 5
+                        lesson_number = i
+                    lessons_list[lesson_number] = lesson_info
+                    i = int(lesson_number)
 
             schedule_dict[day_week] = lessons_list
 
