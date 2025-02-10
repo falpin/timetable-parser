@@ -4,7 +4,7 @@ import re
 import json
 
 URL = "https://pronew.chenk.ru/blocks/manage_groups/website/"
-COMPLEX = ["list.php?id=1", "list.php?id=3"]
+COMPLEX = {"Блюхера":"list.php?id=1", "Российская":"list.php?id=3"}
 
 def get_courses(complex):  # получение всех групп и курсов
     response = requests.get(URL+complex)
