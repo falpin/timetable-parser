@@ -51,6 +51,9 @@ def send_schedule():
                 group_url = groups[group]
                 schedule = json.loads(parser.get_schedule(group_url))
                 data[group] = schedule
+                print(f"[ {date} {time} ]    Группа {group} получена...")
     response = requests.post('https://falpin.ru/api/save_schedule', json=data, headers=headers)
     date, time = now_time()
     print(f"{date} {time}:    Сохранение расписания: {json.loads(response.text)}")
+
+send_schedule()
