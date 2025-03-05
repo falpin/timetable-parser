@@ -57,4 +57,9 @@ def send_schedule():
     date, time = now_time()
     print(f"{date} {time}:    Сохранение расписания: {json.loads(response.text)}")
 
-send_schedule()
+i = 0
+while True:
+    i+=1
+    print(i)
+    send_schedule()
+    time.sleep(3600)
