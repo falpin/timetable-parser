@@ -34,8 +34,9 @@ def send_courses():
     for complex_name in parser.COMPLEX:
         courses = json.loads(parser.get_courses(parser.COMPLEX[complex_name]))
         if courses == {}: return
+        data = {}
         data["complex"] = complex_name
-        response = requests.post('https://falpin.ru/api/save_groups', json=data, headers=headers)
+        response = requests.post('https://timetable.falpin.ru/api/save_groups', json=data, headers=headers)
         date, time = now_time()
         print(f"{date} {time}:    Сохранение групп: {json.loads(response.text)}")
 
@@ -53,13 +54,9 @@ def send_schedule():
                 data[group] = schedule
                 date, time = now_time()
                 print(f"[ {date} {time} ]    Группа {group} получена...")
-    response = requests.post('https://falpin.ru/api/save_schedule', json=data, headers=headers)
+    response = requests.post('https://timetable.falpin.ru/api/save_schedule', json=data, headers=headers)
     date, time = now_time()
     print(f"{date} {time}:    Сохранение расписания: {json.loads(response.text)}")
 
-i = 0
-while True:
-    i+=1
-    print(i)
-    send_schedule()
-    time.sleep(3600)
+# send_schedule()
+send_courses()
