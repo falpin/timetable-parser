@@ -5,6 +5,7 @@ import json
 import requests
 import time
 import config
+import time
 
 api_key = config.API_KEY[0]
 
@@ -58,5 +59,8 @@ def send_schedule():
     date, time = now_time()
     print(f"{date} {time}:    Сохранение расписания: {json.loads(response.text)}")
 
-# send_schedule()
-send_courses()
+while True:
+    send_courses()
+    send_schedule()
+    print("Ожидание следующего запуска через 1 час...")
+    time.sleep(3600)
